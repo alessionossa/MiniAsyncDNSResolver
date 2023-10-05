@@ -47,7 +47,11 @@ extension DNSSD {
             let serviceRefPtr = UnsafeMutablePointer<DNSServiceRef?>.allocate(capacity: 1)
             defer { serviceRefPtr.deallocate() }
 
-            Logger().log(level: .default, "interface.kDNSServiceInterfaceIndex hex representation is \(String(format: "%lx", interface.kDNSServiceInterfaceIndex))")
+            if #available(iOS 14.0, macOS 11.0, *) {
+                Logger().log(level: .default, "interface.kDNSServiceInterfaceIndex hex representation is \(String(format: "%lx", interface.kDNSServiceInterfaceIndex))")
+            } else {
+                os_log(.default, "interface.kDNSServiceInterfaceIndex hex representation is %@", String(format: "%lx", interface.kDNSServiceInterfaceIndex))
+            }
             
             // Run the query
             let code = DNSServiceQueryRecord(
